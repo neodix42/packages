@@ -13,6 +13,7 @@ jobs:
 
       - name: Create packages
         run: |
+          sudo apt install -y createrepo-c
           REPO_DIR=$PWD
           TAG=$(git ls-remote --tags https://github.com/ton-blockchain/ton/  | tail -1 | sed -n -e 's/^.*tags\///p')
           echo "latest TAG = $TAG"
@@ -37,9 +38,7 @@ jobs:
 
           mkdir packages-out
 
-          # rpm
-          sudo apt install -y createrepo-c
-          cd ../..
+          # rpm          
           chmod +x $REPO_DIR/packages/rpm.sh
           $REPO_DIR/packages/rpm.sh packages-out $REPO_DIR/packages/rpm/SPECS/ton.spec $PWD/ton-linux-rpm-amd64 amd64 ${TAG:1}
           $REPO_DIR/packages/rpm.sh packages-out $REPO_DIR/packages/rpm/SPECS/ton.spec $PWD/ton-linux-rpm-aarch64 aarch64 ${TAG:1}
@@ -54,9 +53,10 @@ jobs:
         run: |
           LATEST_TAG=$(git ls-remote --tags https://github.com/ton-blockchain/ton/  | tail -1 | sed -n -e 's/^.*tags\///p')
           echo "LATEST_TAG $LATEST_TAG"
+          git reset --hard origin/main
           cp -r ../work/packages-out/rpm-install rpm
           git add .
-          git commit -m "create release" || true
+          git commit -m "create release $LATEST_TAG" || true
           git push          
           gh release create --notes "" $LATEST_TAG ./*.tar.gz
         env:
