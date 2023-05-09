@@ -1,0 +1,75 @@
+name: Create release
+
+on: [workflow_dispatch]
+
+permissions: write-all
+
+jobs:
+  create-release:
+    runs-on: ubuntu-22.04
+
+      - uses: actions/checkout@v3
+
+      - name: Get next tag
+        id: tag
+        run: |
+          git fetch --all --tags
+          git tag -l
+          NEW_TAG=v$(date +'%Y.%m')
+          FOUND=$(git tag -l | grep $NEW_TAG | wc -l)
+          if [ $FOUND -eq 0 ]; then
+            echo "TAG=$NEW_TAG" >> $GITHUB_OUTPUT
+          else
+            echo "TAG=$NEW_TAG-$FOUND" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Create packages
+        run: |
+          REPO_DIR=$PWD
+          TAG=${{ steps.tag.outputs.TAG }}
+          echo "latest TAG = $TAG"
+
+          mkdir ../work; cd ../work
+          curl -L https://github.com/ton-blockchain/ton/releases/latest/download/ton-linux-arm64.zip -o ton-linux-arm64.zip
+          curl -L https://github.com/ton-blockchain/ton/releases/latest/download/ton-linux-x86_64.zip -o ton-linux-amd64.zip
+          unzip ton-linux-arm64.zip -d ton-linux-arm64
+          unzip ton-linux-amd64.zip -d ton-linux-amd64
+          rm -rf ton-linux-arm64/lib ton-linux-arm64/smartcont
+          rm -rf ton-linux-amd64/lib ton-linux-amd64/smartcont
+
+          mkdir -p ton-linux-rpm-aarch64/bin ton-linux-rpm-aarch64/lib
+          cp ton-linux-arm64/* ton-linux-rpm-aarch64/bin/
+          mv ton-linux-rpm-aarch64/bin/libtonlibjson.so.0.5 ton-linux-rpm-aarch64/lib/
+          chmod 555 ton-linux-rpm-aarch64/bin/* ton-linux-rpm-aarch64/lib/*
+
+          mkdir -p ton-linux-rpm-amd64/bin ton-linux-rpm-amd64/lib
+          cp ton-linux-amd64/* ton-linux-rpm-amd64/bin/
+          mv ton-linux-rpm-amd64/bin/libtonlibjson.so.0.5 ton-linux-rpm-amd64/lib/
+          chmod 555 ton-linux-rpm-amd64/bin/* ton-linux-rpm-amd64/lib/*
+
+          mkdir packages-out
+
+          # rpm
+          sudo apt install -y createrepo-c
+          cd ../..
+          chmod +x $REPO_DIR/packages/rpm.sh
+          $REPO_DIR/packages/rpm.sh packages-out $REPO_DIR/packages/rpm/SPECS/ton.spec $PWD/ton-linux-rpm-amd64 amd64 ${TAG:1}
+          $REPO_DIR/packages/rpm.sh packages-out $REPO_DIR/packages/rpm/SPECS/ton.spec $PWD/ton-linux-rpm-aarch64 aarch64 ${TAG:1}
+          cd packages-out/rpm-install
+          createrepo_c .
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      ## RPM release
+      # We can't rely on GH Releases for RPM because a RPM repo must have a repodata/ directory and Releases don't support directories
+      - name: Create release
+        run: |
+          LATEST_TAG=$(git ls-remote --tags https://github.com/ton-blockchain/ton/  | tail -1 | sed -n -e 's/^.*tags\///p')
+          echo "LATEST_TAG $LATEST_TAG"
+          cp -r ../work/packages-out/rpm-install rpm
+          git add .
+          git commit -m "create release" || true
+          git push          
+          gh release create --notes "" $LATEST_TAG ./*.tar.gz
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
