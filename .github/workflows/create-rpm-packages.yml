@@ -8,25 +8,13 @@ jobs:
   create-release:
     runs-on: ubuntu-22.04
 
+    steps:
       - uses: actions/checkout@v3
-
-      - name: Get next tag
-        id: tag
-        run: |
-          git fetch --all --tags
-          git tag -l
-          NEW_TAG=v$(date +'%Y.%m')
-          FOUND=$(git tag -l | grep $NEW_TAG | wc -l)
-          if [ $FOUND -eq 0 ]; then
-            echo "TAG=$NEW_TAG" >> $GITHUB_OUTPUT
-          else
-            echo "TAG=$NEW_TAG-$FOUND" >> $GITHUB_OUTPUT
-          fi
 
       - name: Create packages
         run: |
           REPO_DIR=$PWD
-          TAG=${{ steps.tag.outputs.TAG }}
+          TAG=$(git ls-remote --tags https://github.com/ton-blockchain/ton/  | tail -1 | sed -n -e 's/^.*tags\///p')
           echo "latest TAG = $TAG"
 
           mkdir ../work; cd ../work
