@@ -20,27 +20,27 @@ jobs:
 
           mkdir ../work; cd ../work
           curl -L https://github.com/ton-blockchain/ton/releases/latest/download/ton-linux-arm64.zip -o ton-linux-arm64.zip
-          curl -L https://github.com/ton-blockchain/ton/releases/latest/download/ton-linux-x86_64.zip -o ton-linux-amd64.zip
+          curl -L https://github.com/ton-blockchain/ton/releases/latest/download/ton-linux-x86_64.zip -o ton-linux-x86_64.zip
           unzip ton-linux-arm64.zip -d ton-linux-arm64
-          unzip ton-linux-amd64.zip -d ton-linux-amd64
+          unzip ton-linux-x86_64.zip -d ton-linux-x86_64
           rm -rf ton-linux-arm64/lib ton-linux-arm64/smartcont
-          rm -rf ton-linux-amd64/lib ton-linux-amd64/smartcont
+          rm -rf ton-linux-x86_64/lib ton-linux-x86_64/smartcont
 
           mkdir -p ton-linux-rpm-aarch64/bin ton-linux-rpm-aarch64/lib
           cp ton-linux-arm64/* ton-linux-rpm-aarch64/bin/
           mv ton-linux-rpm-aarch64/bin/libtonlibjson.so.0.5 ton-linux-rpm-aarch64/lib/
           chmod 555 ton-linux-rpm-aarch64/bin/* ton-linux-rpm-aarch64/lib/*
 
-          mkdir -p ton-linux-rpm-amd64/bin ton-linux-rpm-amd64/lib
-          cp ton-linux-amd64/* ton-linux-rpm-amd64/bin/
-          mv ton-linux-rpm-amd64/bin/libtonlibjson.so.0.5 ton-linux-rpm-amd64/lib/
-          chmod 555 ton-linux-rpm-amd64/bin/* ton-linux-rpm-amd64/lib/*
+          mkdir -p ton-linux-rpm-x86_64/bin ton-linux-rpm-x86_64/lib
+          cp ton-linux-x86_64/* ton-linux-rpm-x86_64/bin/
+          mv ton-linux-rpm-x86_64/bin/libtonlibjson.so.0.5 ton-linux-rpm-x86_64/lib/
+          chmod 555 ton-linux-rpm-x86_64/bin/* ton-linux-rpm-x86_64/lib/*
 
           mkdir packages-out
 
           # rpm          
           chmod +x $REPO_DIR/packages/rpm.sh
-          $REPO_DIR/packages/rpm.sh packages-out $REPO_DIR/packages/rpm/SPECS/ton.spec $PWD/ton-linux-rpm-amd64 amd64 ${TAG:1}
+          $REPO_DIR/packages/rpm.sh packages-out $REPO_DIR/packages/rpm/SPECS/ton.spec $PWD/ton-linux-rpm-x86_64 x86_64 ${TAG:1}
           $REPO_DIR/packages/rpm.sh packages-out $REPO_DIR/packages/rpm/SPECS/ton.spec $PWD/ton-linux-rpm-aarch64 aarch64 ${TAG:1}
           cd packages-out/rpm-install
           createrepo_c .
@@ -55,11 +55,25 @@ jobs:
           echo "LATEST_TAG $LATEST_TAG"
           git config user.name "GitHub Actions Bot"
           git config user.email "<>"
+          git config http.postBuffer 924288000
+          git config http.lowSpeedTime 600
           git reset --hard origin/main
+          rm -rf rpm
           cp -r ../work/packages-out/rpm-install rpm
-          git add .
-          git commit -m "create release $LATEST_TAG" || true
-          git push          
-          gh release create --notes "" $LATEST_TAG ./*.tar.gz
+          
+          # one-by-one, since there is a gh limit of 100 MB upload
+          git add rpm/x86_64/
+          git commit -m "create release x86_64 $LATEST_TAG" || true
+          git push
+          
+          git add rpm/aarch64/
+          git commit -m "create release aarch64 $LATEST_TAG" || true
+          git push
+          
+          git add rpm/repodata/
+          git commit -m "create release repodata $LATEST_TAG" || true
+          git push
+
+          #gh release create --notes "" $LATEST_TAG ./*.tar.gz
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
