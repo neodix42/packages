@@ -1,4 +1,4 @@
-pkgbase = ton-bin
+pkgbase = ton
 	pkgdesc = TON (The Open Network) binary artifacts - Ultra-scalable blockchain, designed by Telegram to onboard billions of users.
 	pkgver = dev
 	pkgrel = PKG_REL #pkg_rel
