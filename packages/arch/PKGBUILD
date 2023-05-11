@@ -1,6 +1,6 @@
 pkgname=ton-bin
 pkgver=dev
-pkgrel=PKG_REL #pkg_rel
+pkgrel=1
 pkgdesc="The Open Network"
 arch=('x86_64')
 url="https://github.com/ton-blockchain/ton"
