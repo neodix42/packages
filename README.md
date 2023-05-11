@@ -8,9 +8,9 @@ enabled=1
 type=rpm
 gpgcheck=0
 EOF
-
+```
+```
 yum install ton
-
 ```
 
 ### Install (pamac)
