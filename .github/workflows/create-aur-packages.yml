@@ -28,10 +28,10 @@ jobs:
         run: |
           TAG=$(git ls-remote --tags https://github.com/ton-blockchain/ton/  | tail -1 | sed -n -e 's/^.*tags\///p')
           echo "latest TAG = $TAG"
-          sed -i "/\\tpkgver = /c\\\tpkgver = $TAG" packages/arch/.SRCINFO
-          sed -i "/pkgver=/c\pkgver=$TAG" packages/arch/PKGBUILD
+          sed -i "/\\tpkgver = /c\\\tpkgver = ${TAG:1}" packages/arch/.SRCINFO
+          sed -i "/pkgver=/c\pkgver=${TAG:1}" packages/arch/PKGBUILD
 
-          git clone ssh://aur@aur.archlinux.org/ton.git aur-ton
+          git clone ssh://aur@aur.archlinux.org/ton-bin.git aur-ton
           cd aur-ton
           git rm -rf *
           cp ../packages/arch/{PKGBUILD,.SRCINFO} .
