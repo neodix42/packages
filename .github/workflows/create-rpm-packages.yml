@@ -35,8 +35,10 @@ jobs:
           cp ton-linux-x86_64/* ton-linux-rpm-x86_64/bin/
           mv ton-linux-rpm-x86_64/bin/libtonlibjson.so.0.5 ton-linux-rpm-x86_64/lib/
           chmod 555 ton-linux-rpm-x86_64/bin/* ton-linux-rpm-x86_64/lib/*
-          cp -R ton-linux-rpm-x86_64 ton-linux-x86_64          
+          mkdir ton-linux-x86_64
+          cp -R ton-linux-rpm-x86_64/* ton-linux-x86_64          
           tar -cvf ton-linux-x86-64.tar.gz ton-linux-x86_64/*
+          tar -tvf ton-linux-x86-64.tar.gz
 
           mkdir packages-out
 
