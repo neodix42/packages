@@ -1,4 +1,4 @@
-pkgbase = ton
+pkgbase = ton-bin
 	pkgdesc = Ultra-scalable blockchain, designed by Telegram to onboard billions of users.
 	pkgver = dev
 	pkgrel = 1
