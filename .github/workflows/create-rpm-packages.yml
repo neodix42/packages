@@ -1,4 +1,4 @@
-name: Create release
+name: Create RPM release
 
 on: [workflow_dispatch]
 
@@ -35,6 +35,8 @@ jobs:
           cp ton-linux-x86_64/* ton-linux-rpm-x86_64/bin/
           mv ton-linux-rpm-x86_64/bin/libtonlibjson.so.0.5 ton-linux-rpm-x86_64/lib/
           chmod 555 ton-linux-rpm-x86_64/bin/* ton-linux-rpm-x86_64/lib/*
+          cp -R ton-linux-rpm-x86_64 ton-linux-x86_64          
+          tar -cvf ton-linux-x86-64.tar.gz ton-linux-x86_64/*
 
           mkdir packages-out
 
@@ -74,6 +76,6 @@ jobs:
           git commit -m "create release repodata $LATEST_TAG" || true
           git push
 
-          #gh release create --notes "" $LATEST_TAG ./*.tar.gz
+          gh release create --notes "" $LATEST_TAG ../work/ton-linux-x86-64.tar.gz
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
