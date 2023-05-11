@@ -15,7 +15,7 @@ jobs:
       - uses: actions/checkout@v3
 
       - name: SSH and git setup
-      - run: |
+        run: |
           ssh-agent -a $SSH_AUTH_SOCK > /dev/null
           ssh-add - <<< "${{ secrets.AUR_REPO_KEY }}"
           ssh-add -L
@@ -25,7 +25,7 @@ jobs:
           git config --global user.email actions@github.com
 
       - name: Push packages to official TON AUR repo (aur.archlinux.org)
-      - run: |
+        run: |
           TAG=$(git ls-remote --tags https://github.com/ton-blockchain/ton/  | tail -1 | sed -n -e 's/^.*tags\///p')
           echo "latest TAG = $TAG"
           sed -i "s/pkgrel = .* #pkg_rel/pkgrel = $TAG #pkg_rel/g" packages/arch/.SRCINFO
