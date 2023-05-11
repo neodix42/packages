@@ -37,7 +37,7 @@ jobs:
           chmod 555 ton-linux-rpm-x86_64/bin/* ton-linux-rpm-x86_64/lib/*
           mkdir ton-linux-x86_64-tmp
           cp -R ton-linux-rpm-x86_64/* ton-linux-x86_64-tmp        
-          tar -cvf ton-linux-x86-64.tar.gz ton-linux-x86_64-tmp/*
+          tar -cvf ton-linux-x86-64.tar.gz -C ton-linux-x86_64-tmp .
           tar -tvf ton-linux-x86-64.tar.gz
 
           mkdir packages-out
