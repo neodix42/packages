@@ -1,4 +1,4 @@
-### Install (yum)
+### Install RPM (yum)
 ```
 cat > /etc/yum.repos.d/ton.repo << EOF
 [ton]
@@ -13,7 +13,7 @@ EOF
 yum install ton
 ```
 
-### Install (pamac)
+### Install AUR (pamac)
 ```
 pamac build ton-bin
 ```
