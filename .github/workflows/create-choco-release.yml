@@ -28,8 +28,9 @@ jobs:
           echo "latest TAG = %TAG%"
           
           sed -i -e "s/\(<version>\).*\(<\/version>\)/<version>%TAG%<\/version>/g" ton.nuspec
+          sed -i -e "s/\(checksum64    = '\).*\('\)/checksum64    = '%CHECK_SUM%'/g" tools\chocolateyinstall.ps1
           
           cd packages\chocolatey
           choco pack
-          choco apikey --api-key "${{ secrets.AUR_REPO_KEY }}" -source https://push.chocolatey.org/
+          choco apikey --api-key "${{ secrets.CHOCOLATEY_API_KEY }}" -source https://push.chocolatey.org/
           choco push --source https://push.chocolatey.org/
