@@ -14,16 +14,18 @@ jobs:
       - name: Check out current repository
         uses: actions/checkout@v3
 
+      - name: Set up Cygwin
+        uses: egor-tensin/setup-cygwin@v4
+
       - name: Build and push the package
         run: |
-          curl -h
-          checksum -h
-          choco install checksum curl
-          curl -L https://github.com/ton-blockchain/ton/releases/latest/download/ton-win-x86-64.zip -o ton-win-x86-64.zip
-          checksum -t sha256 -f ton-win-x86-64.zip
+          choco install checksum
+          curl -Ls https://github.com/ton-blockchain/ton/releases/latest/download/ton-win-x86-64.zip -o ton-win-x86-64.zip
+          FOR /F "tokens=*" %g IN ('checksum -t sha256 -f ton-win-x86-64.zip') do (SET CHECK_SUM=%g)
+          echo "checksum %CHECK_SUM%"
           
-          TAG=$(git ls-remote --tags https://github.com/ton-blockchain/ton/  | tail -1 | sed -n -e 's/^.*tags\///p')
-          echo "latest TAG = $TAG"          
+          FOR /F "tokens=*" %g IN ('git ls-remote --tags https://github.com/ton-blockchain/ton/ ^| tail -n 1 ^| sed -n -e "s/^.*tags\///p"') do ( SET TAG=%g)
+          echo "latest TAG = %TAG%"
           
 #          cd packages\chocolatey
 #          choco pack
