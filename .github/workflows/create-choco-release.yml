@@ -27,7 +27,9 @@ jobs:
           FOR /F "tokens=*" %%g IN ('git ls-remote --tags https://github.com/ton-blockchain/ton/ ^| tail -n 1 ^| sed -n -e "s/^.*tags\///p"') do ( SET TAG=%%g)
           echo "latest TAG = %TAG%"
           
-#          cd packages\chocolatey
-#          choco pack
-#          choco apikey --api-key "${{ secrets.AUR_REPO_KEY }}" -source https://push.chocolatey.org/
-#          choco push --source https://push.chocolatey.org/
+          sed -i -e "s/\(<version>\).*\(<\/version>\)/<version>%TAG%<\/version>/g" ton.nuspec
+          
+          cd packages\chocolatey
+          choco pack
+          choco apikey --api-key "${{ secrets.AUR_REPO_KEY }}" -source https://push.chocolatey.org/
+          choco push --source https://push.chocolatey.org/
