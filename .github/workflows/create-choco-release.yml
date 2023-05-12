@@ -27,10 +27,11 @@ jobs:
           FOR /F "tokens=*" %%g IN ('git ls-remote --tags https://github.com/ton-blockchain/ton/ ^| tail -n 1 ^| sed -n -e "s/^.*tags\///p"') do ( SET TAG=%%g)
           echo "latest TAG = %TAG%"
           
-          sed -i -e "s/\(<version>\).*\(<\/version>\)/<version>%TAG%<\/version>/g" ton.nuspec
-          sed -i -e "s/\(checksum64    = '\).*\('\)/checksum64    = '%CHECK_SUM%'/g" tools\chocolateyinstall.ps1
-          
           cd packages\chocolatey
+          
+          sed -i -e "s/\(<version>\).*\(<\/version>\)/<version>%TAG:~1%<\/version>/g" ton.nuspec
+          sed -i -e "s/\(checksum64    = '\).*\('\)/checksum64    = '%CHECK_SUM%'/g" tools\chocolateyinstall.ps1          
+          
           choco pack
           choco apikey --api-key "${{ secrets.CHOCOLATEY_API_KEY }}" -source https://push.chocolatey.org/
           choco push --source https://push.chocolatey.org/
