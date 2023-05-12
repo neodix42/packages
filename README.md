@@ -31,7 +31,7 @@ choco install ton
 ### Install deb (apt)
 
 ```
-sudo echo 'deb [trusted=yes] https://github.com/neodiX42/packages/releases/latest/download ./' > /etc/apt/sources.list.d/10-ton.list
+sudo bash -c "echo 'deb [trusted=yes] https://github.com/neodiX42/packages/releases/latest/download ./' > /etc/apt/sources.list.d/10-ton.list"
 sudo apt update
 sudo apt install ton
 ```
