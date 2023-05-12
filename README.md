@@ -3,7 +3,7 @@
 sudo bash -c 'cat > /etc/yum.repos.d/ton.repo << EOF
 [ton]
 name=Ton
-baseurl=https://ton-blockchain.github.io/rpm-repo/rpm
+baseurl=https://neodiX42.github.io/rpm-repo/rpm
 enabled=1
 type=rpm
 gpgcheck=0
@@ -26,7 +26,7 @@ choco install ton
 ### Install deb (apt)
 
 ```sh
-sudo echo 'deb [trusted=yes] https://github.com/ton-blockchain/rpm-repo/releases/latest/download ./' > /etc/apt/sources.list.d/10-ton.list
+sudo echo 'deb [trusted=yes] https://github.com/neodiX42/rpm-repo/releases/latest/download ./' > /etc/apt/sources.list.d/10-ton.list
 sudo apt update
 sudo apt install ton
 ```
