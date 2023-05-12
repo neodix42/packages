@@ -1,4 +1,4 @@
-name: Create choco release
+name: Create choco packages
 
 on: [workflow_dispatch,workflow_call]
 

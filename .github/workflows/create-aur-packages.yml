@@ -1,4 +1,4 @@
-name: Create AUR release
+name: Create AUR packages
 
 on: [workflow_dispatch,workflow_call]
 

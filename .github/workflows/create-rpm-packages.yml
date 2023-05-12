@@ -1,4 +1,4 @@
-name: Create RPM release
+name: Create RPM packages
 
 on: [workflow_dispatch,workflow_call]
 
