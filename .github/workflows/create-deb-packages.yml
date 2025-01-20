@@ -30,7 +30,7 @@ jobs:
           VERSION=${TAG:1}.1
           echo $VERSION
 
-          cd ton
+          cd packages/deb/ton
           git clone --recursive https://github.com/ton-blockchain/ton.git debian/source          
           
           sed -i "s/REVISION/${VERSION}/g" debian/changelog
