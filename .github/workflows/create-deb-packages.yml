@@ -31,8 +31,10 @@ jobs:
           echo $VERSION
 
           pwd
-          ls -larth
-          cd packages/deb/ton
+          ls -larth packages
+          ls -larth packages/deb
+          cd packages/deb
+          
           git clone --recursive https://github.com/ton-blockchain/ton.git debian/source          
           
           sed -i "s/REVISION/${VERSION}/g" debian/changelog
