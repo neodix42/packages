@@ -1,0 +1,21 @@
+#!/usr/bin/make -f
+
+# Export environment variables for the build
+export DEB_BUILD_MAINT_OPTIONS = hardening=+all
+
+%:
+	dh $@
+
+override_dh_auto_configure:
+	dh_auto_configure --buildsystem=cmake --sourcedirectory=debian/source -- \
+		-DCMAKE_BUILD_TYPE=Release \
+		-DCMAKE_C_COMPILER=clang-16 \
+		-DCMAKE_CXX_COMPILER=clang++-16 \
+		-GNinja
+
+override_dh_auto_build:
+	ninja -C obj-x86_64-linux-gnu lite-client fift func validator-engine
+
+override_dh_auto_clean:
+	dh_auto_clean
+	rm -rf obj-x86_64-linux-gnu
