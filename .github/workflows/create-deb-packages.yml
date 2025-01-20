@@ -30,6 +30,8 @@ jobs:
           VERSION=${TAG:1}.1
           echo $VERSION
 
+          pwd
+          ls -larth
           cd packages/deb/ton
           git clone --recursive https://github.com/ton-blockchain/ton.git debian/source          
           
