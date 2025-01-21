@@ -41,7 +41,7 @@ jobs:
           sed -i "s/DATE/${DATE}/g" debian/changelog
           
           dpkg-buildpackage -S -kDA58A5F65D5236A0C8FD9A54AF03339AD20F1920 -sa -rfakeroot -tc
-          dput ppa:ton-foundation/ppa ../ton_${VERSION}_source.changes
+          dput -P ppa:ton-foundation/ppa ../ton_${VERSION}_source.changes
 
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
