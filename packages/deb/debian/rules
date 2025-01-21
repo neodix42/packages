@@ -7,15 +7,17 @@ export DEB_BUILD_MAINT_OPTIONS = hardening=+all
 	dh $@
 
 override_dh_auto_configure:
-	dh_auto_configure --buildsystem=cmake --sourcedirectory=debian/source -- \
+	dh_auto_configure --buildsystem=cmake \
+		--builddirectory=build-deb \
+		--sourcedirectory=debian/source -- \
 		-DCMAKE_BUILD_TYPE=Release \
 		-DCMAKE_C_COMPILER=clang \
 		-DCMAKE_CXX_COMPILER=clang++ \
 		-GNinja
 
 override_dh_auto_build:
-	ninja -C obj-x86_64-linux-gnu lite-client fift func validator-engine
+	ninja -C build-deb lite-client fift func validator-engine
 
 override_dh_auto_clean:
 	dh_auto_clean
-	rm -rf obj-x86_64-linux-gnu
+	rm -rf build-deb
