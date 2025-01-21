@@ -1,7 +1,7 @@
-build-deb/lite-client usr/bin
-build-deb/fift usr/bin
-build-deb/validator-engine usr/bin
-build-deb/libtonlibjson.so /usr/lib
-build-deb/libemulator.so /usr/lib
-debian/source/crypto/fift /usr/lib/fift
-debian/source/crypto/smartcont /usr/share/ton/smartcont/
+build-deb/lite-client/lite-client usr/bin
+build-deb/crypto/fift usr/bin
+build-deb/validator-engine/validator-engine usr/bin
+build-deb/tonlib/libtonlibjson.so.0.5 usr/lib
+build-deb/emulator/libemulator.so usr/lib
+debian/source/crypto/fift usr/lib
+debian/source/crypto/smartcont usr/share/ton

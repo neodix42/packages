@@ -1,21 +1,33 @@
 #!/usr/bin/make -f
 
+export DEB_BUILD_MAINT_OPTIONS = hardening=+all
+
 %:
 	dh $@
 
 override_dh_auto_configure:
-	dh_auto_configure --buildsystem=cmake \
-		--builddirectory=build-deb \
-		--sourcedirectory=debian/source -- \
+	mkdir -p build-deb
+	cd build-deb && cmake \
 		-DCMAKE_BUILD_TYPE=Release \
 		-DCMAKE_C_COMPILER=clang \
 		-DCMAKE_CXX_COMPILER=clang++ \
-		-DTON_ARCH="" \
-		-GNinja
+		-DTON_ARCH= \
+		-GNinja ../debian/source
 
 override_dh_auto_build:
-	ninja -C build-deb lite-client fift func validator-engine
+	ninja -C build-deb lite-client tonlibjson emulator
 
 override_dh_auto_clean:
 	dh_auto_clean
 	rm -rf build-deb
+
+override_dh_dwz:
+	echo "Skipping dh_dwz due to incompatible debug sections"
+
+override_dh_auto_install:
+	dh_auto_install
+	for f in $(find build-deb -type f); do \
+	    if file "$$f" | grep -q "ELF"; then \
+	        strip --strip-unneeded "$$f"; \
+	    fi; \
+	done
