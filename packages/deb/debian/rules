@@ -1,8 +1,5 @@
 #!/usr/bin/make -f
 
-# Export environment variables for the build
-export DEB_BUILD_MAINT_OPTIONS = hardening=+all
-
 %:
 	dh $@
 
@@ -13,6 +10,7 @@ override_dh_auto_configure:
 		-DCMAKE_BUILD_TYPE=Release \
 		-DCMAKE_C_COMPILER=clang \
 		-DCMAKE_CXX_COMPILER=clang++ \
+		-DTON_ARCH="" \
 		-GNinja
 
 override_dh_auto_build:

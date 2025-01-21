@@ -1,0 +1,7 @@
+build-deb/lite-client usr/bin
+build-deb/fift usr/bin
+build-deb/validator-engine usr/bin
+build-deb/libtonlibjson.so /usr/lib
+build-deb/libemulator.so /usr/lib
+debian/source/crypto/fift /usr/lib/fift
+debian/source/crypto/smartcont /usr/share/ton/smartcont/
