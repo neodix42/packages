@@ -1,6 +1,8 @@
 #!/usr/bin/make -f
 
 export DEB_BUILD_MAINT_OPTIONS = hardening=+all
+export CFLAGS := $(filter-out -march=native,$(CFLAGS)) -mcpu=generic
+export CXXFLAGS := $(filter-out -march=native,$(CXXFLAGS)) -mcpu=generic
 
 %:
 	dh $@
