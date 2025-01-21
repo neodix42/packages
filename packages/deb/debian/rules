@@ -15,7 +15,7 @@ override_dh_auto_configure:
 		-GNinja ../debian/source
 
 override_dh_auto_build:
-	ninja -C build-deb lite-client tonlibjson emulator
+	ninja -C build-deb lite-client tonlibjson emulator validator-engine fift
 
 override_dh_auto_clean:
 	dh_auto_clean
