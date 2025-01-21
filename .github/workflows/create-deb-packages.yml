@@ -36,7 +36,7 @@ jobs:
           git clone --recursive https://github.com/ton-blockchain/ton.git debian/source          
           rm -rf debian/source/example
           rm -rf debian/source/third-party/rocksdb/docs
-          rm rf debian/source/.git
+          rm -rf debian/source/.git
           sed -i "s/REVISION/${VERSION}/g" debian/changelog
           sed -i "s/VERSION/${VERSION}/g" debian/changelog
           sed -i "s/DATE/${DATE}/g" debian/changelog
