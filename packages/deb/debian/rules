@@ -1,19 +1,25 @@
 #!/usr/bin/make -f
 
 export DEB_BUILD_MAINT_OPTIONS = hardening=+all
-export CFLAGS := $(filter-out -march=native,$(CFLAGS)) -mcpu=generic
-export CXXFLAGS := $(filter-out -march=native,$(CXXFLAGS)) -mcpu=generic
 
 %:
 	dh $@
 
 override_dh_auto_configure:
 	mkdir -p build-deb
+	ARCH=$$(uname -m); \
+	if [ "$$ARCH" = "x86_64" ]; then \
+		echo "skip"; \
+	elif [ "$$ARCH" = "aarch64" ]; then \
+		export CFLAGS := $(filter-out -march=native,$(CFLAGS)) -mcpu=generic \
+		export CXXFLAGS := $(filter-out -march=native,$(CXXFLAGS)) -mcpu=generic \
+	else \
+		FLAGS="-O2"; \
+	fi; \
 	cd build-deb && cmake \
 		-DCMAKE_BUILD_TYPE=Release \
 		-DCMAKE_C_COMPILER=clang \
 		-DCMAKE_CXX_COMPILER=clang++ \
-		-DTON_ARCH= \
 		-GNinja ../debian/source
 
 override_dh_auto_build:
@@ -29,7 +35,7 @@ override_dh_dwz:
 override_dh_auto_install:
 	dh_auto_install
 	for f in $(find build-deb -type f); do \
-	    if file "$$f" | grep -q "ELF"; then \
-	        strip --strip-unneeded "$$f"; \
-	    fi; \
+		if file "$$f" | grep -q "ELF"; then \
+			strip --strip-unneeded "$$f"; \
+		fi; \
 	done
