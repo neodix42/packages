@@ -11,8 +11,7 @@ override_dh_auto_configure:
 	if [ "$$ARCH" = "x86_64" ]; then \
 		echo "skip"; \
 	elif [ "$$ARCH" = "aarch64" ]; then \
-		export CFLAGS="$(filter-out -march=native,$(CFLAGS)) -mcpu=generic" \
-		export CXXFLAGS="$(filter-out -march=native,$(CXXFLAGS)) -mcpu=generic" \
+		FLAGS="$(filter-out -march=native,$(CFLAGS)) -mcpu=arm64" \
 	else \
 		FLAGS="-O2"; \
 	fi; \
@@ -20,6 +19,8 @@ override_dh_auto_configure:
 		-DCMAKE_BUILD_TYPE=Release \
 		-DCMAKE_C_COMPILER=clang \
 		-DCMAKE_CXX_COMPILER=clang++ \
+		-DCMAKE_C_FLAGS="$$FLAGS" \
+		-DCMAKE_CXX_FLAGS="$$FLAGS" \
 		-GNinja ../debian/source
 
 override_dh_auto_build:
