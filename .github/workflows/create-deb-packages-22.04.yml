@@ -28,7 +28,7 @@ jobs:
           TAG=$(git ls-remote --tags https://github.com/ton-blockchain/ton/  | tail -1 | sed -n -e 's/^.*tags\///p')
           TAG=$(echo $TAG | sed  s'/-/./')
           DATE=$(date -R)
-          VERSION=${TAG:1}.13.22.04
+          VERSION=${TAG:1}.14.22.04
           echo $VERSION
 
           cd packages/deb
@@ -40,6 +40,7 @@ jobs:
           sed -i "s/REVISION/${VERSION}/g" debian/changelog
           sed -i "s/VERSION/${VERSION}/g" debian/changelog
           sed -i "s/DATE/${DATE}/g" debian/changelog
+          sed -i "s/DISTRO/jammy/g" debian/changelog
           
           dpkg-buildpackage -S -kDA58A5F65D5236A0C8FD9A54AF03339AD20F1920 -sa -rfakeroot -tc
           dput ppa:ton-foundation/ppa ../ton_${VERSION}_source.changes
