@@ -16,7 +16,7 @@ build-deb/storage/storage-daemon/storage-daemon usr/bin
 build-deb/storage/storage-daemon/storage-daemon-cli usr/bin
 build-deb/validator-engine/validator-engine usr/bin
 build-deb/validator-engine-console/validator-engine-console usr/bin
-build-deb/tonlib/libtonlibjson.so.0.5 usr/lib
+build-deb/tonlib/libtonlibjson.so.0.5 usr/lib/libtonlibjson.so
 build-deb/emulator/libemulator.so usr/lib
 debian/source/crypto/fift usr/lib
 debian/source/crypto/smartcont usr/share/ton
